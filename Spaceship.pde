@@ -1,19 +1,19 @@
-class Paddle extends Shape {
+class Spaceship extends Shape {
   
   float posX = 0;
-  color paddleColor;
+  color spaceshipColor;
   color accentColor;
   float thrusterAnimation = 0;
   
-  Paddle(color paddleColor) {
-    this.paddleColor = paddleColor;
+  Spaceship(color spaceshipColor) {
+    this.spaceshipColor = spaceshipColor;
     this.accentColor = #00FFFF; // Cyan accent for spaceship
     this.y = 450;
     this.w = 40;
     this.h = 30;
   }
   
-  Paddle() {
+  Spaceship() {
     this(#0088FF); // Blue spaceship color
   }
   
@@ -36,7 +36,7 @@ class Paddle extends Shape {
     translate(this.x + this.w/2, this.y + this.h/2);
     
     // Draw spaceship body (triangle pointing up)
-    fill(paddleColor);
+    fill(spaceshipColor);
     stroke(255);
     strokeWeight(2);
     triangle(0, -this.h/2,      // Top point (nose)

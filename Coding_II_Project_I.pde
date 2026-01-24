@@ -1,5 +1,5 @@
 Ball[] balls;
-Paddle paddle;
+Spaceship spaceship;
 int ballCount = 0;
 Wall leftWall;
 Wall rightWall;
@@ -11,7 +11,7 @@ void setup(){
   balls = new Ball[4]; 
   balls[0] = new Ball();
   ballCount++;
-  paddle = new Paddle();
+  spaceship = new Spaceship();
   leftWall = new Wall(0, 0, 4, height, #FF0000);
   rightWall = new Wall(width-4, 0, 4, height, #00FF00);
   bottomWall = new Wall(0, height-4, width, 4, #FF00FF);
@@ -27,11 +27,11 @@ void draw(){
   for (int i = 0; i < ballCount; i++) {    
     balls[i].setPosition(topWall, 
     bottomWall, leftWall, rightWall, 
-    paddle);
+    spaceship);
     balls[i].draw();
   }
-  paddle.setPosition();
-  paddle.draw();
+  spaceship.setPosition();
+  spaceship.draw();
   if (ballCount == 0){
     println("You lost: " + ballCount);
   }
