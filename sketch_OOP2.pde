@@ -24,7 +24,7 @@ void draw(){
   rightWall.draw();
   topWall.draw();
   bottomWall.draw();
-  for (int i = 0; i < balls.length; i++) {    
+  for (int i = 0; i < ballCount; i++) {    
     balls[i].setPosition(topWall, 
     bottomWall, leftWall, rightWall, 
     paddle);
