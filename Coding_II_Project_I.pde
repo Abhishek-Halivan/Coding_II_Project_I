@@ -1,9 +1,12 @@
 Meteor[] meteors;
 Spaceship spaceship;
+ArrayList<Bullet> bullets;
 int meteorCount = 0;
 int maxMeteors = 10; // Increase max meteors
 float lastSpawnTime = 0;
 float spawnInterval = 2000; // Initial interval in milliseconds
+float lastShotTime = 0;
+float shootCooldown = 200; // Milliseconds between shots
 boolean gameStarted = false;
 Wall leftWall;
 Wall rightWall;
@@ -13,6 +16,7 @@ Wall bottomWall;
 void setup(){
   size(500, 500);
   meteors = new Meteor[maxMeteors]; 
+  bullets = new ArrayList<Bullet>();
   spaceship = new Spaceship();
   leftWall = new Wall(0, 0, 4, height, #FF0000);
   rightWall = new Wall(width-4, 0, 4, height, #00FF00);
@@ -37,6 +41,9 @@ void draw(){
       textSize(24);
       text("Press SPACEBAR to start", width/2, height/2 + 100);
     }
+    fill(200);
+    textSize(16);
+    text("Arrow Keys: Move | SPACE: Shoot", width/2, height - 30);
     
     // Draw spaceship on title screen
     spaceship.draw();
@@ -67,6 +74,26 @@ void draw(){
     }
   }
   
+  // Update and draw bullets
+  for (int i = bullets.size() - 1; i >= 0; i--) {
+    Bullet b = bullets.get(i);
+    if (b.active) {
+      b.update();
+      b.draw();
+      
+      // Check collision with meteors
+      for (int j = 0; j < meteorCount; j++) {
+        if (meteors[j] != null && meteors[j].active && b.hitsMeteor(meteors[j])) {
+          meteors[j].active = false; // Destroy meteor
+          b.active = false; // Destroy bullet
+          break;
+        }
+      }
+    } else {
+      bullets.remove(i); // Remove inactive bullets
+    }
+  }
+  
   if (gameStarted) {
     spaceship.setPosition();
   }
@@ -84,5 +111,13 @@ void keyPressed() {
     meteorCount++;
     lastSpawnTime = millis();
     spawnInterval = random(1000, 3000);
+  } else if (gameStarted && key == ' ') {
+    // Shoot bullet with cooldown
+    if (millis() - lastShotTime > shootCooldown) {
+      float bulletX = spaceship.x + spaceship.w/2;
+      float bulletY = spaceship.y;
+      bullets.add(new Bullet(bulletX, bulletY));
+      lastShotTime = millis();
+    }
   }
 }
