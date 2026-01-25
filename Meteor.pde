@@ -1,4 +1,4 @@
-class Ball {
+class Meteor {
   float x;
   float y;
   float d = 16; // Smaller meteorite size
@@ -12,7 +12,7 @@ class Ball {
   float rotationSpeed;
   float[] rockVertices; // For irregular shape
   
-  Ball(float d) {
+  Meteor(float d) {
     this.x = random(width);
     this.y = 20;
     this.speedx = random(-2, 2);
@@ -36,7 +36,7 @@ class Ball {
     }
   }
   
-  Ball() {
+  Meteor() {
     this(16);
   }
   
@@ -64,7 +64,7 @@ class Ball {
     if (this.intersects(topWall)) {
       speedy = speedy*-1;
     } else if (this.intersects(bottomWall)) {
-      ballCount--;
+      meteorCount--;
     } else if (this.intersects(rightWall) || 
                       this.intersects(leftWall)) {
       speedx = speedx*-1;

@@ -1,6 +1,6 @@
-Ball[] balls;
+Meteor[] meteors;
 Spaceship spaceship;
-int ballCount = 0;
+int meteorCount = 0;
 Wall leftWall;
 Wall rightWall;
 Wall topWall;
@@ -8,9 +8,9 @@ Wall bottomWall;
 
 void setup(){
   size(500, 500);
-  balls = new Ball[4]; 
-  balls[0] = new Ball();
-  ballCount++;
+  meteors = new Meteor[4]; 
+  meteors[0] = new Meteor();
+  meteorCount++;
   spaceship = new Spaceship();
   leftWall = new Wall(0, 0, 4, height, #FF0000);
   rightWall = new Wall(width-4, 0, 4, height, #00FF00);
@@ -24,23 +24,23 @@ void draw(){
   rightWall.draw();
   topWall.draw();
   bottomWall.draw();
-  for (int i = 0; i < ballCount; i++) {    
-    balls[i].setPosition(topWall, 
+  for (int i = 0; i < meteorCount; i++) {    
+    meteors[i].setPosition(topWall, 
     bottomWall, leftWall, rightWall, 
     spaceship);
-    balls[i].draw();
+    meteors[i].draw();
   }
   spaceship.setPosition();
   spaceship.draw();
-  if (ballCount == 0){
-    println("You lost: " + ballCount);
+  if (meteorCount == 0){
+    println("You lost: " + meteorCount);
   }
 }
 
 
 void mousePressed() {
-  if (ballCount < balls.length) {
-    balls[ballCount] = new Ball();
-    ballCount++;
+  if (meteorCount < meteors.length) {
+    meteors[meteorCount] = new Meteor();
+    meteorCount++;
   }
 }
