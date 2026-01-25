@@ -1,7 +1,7 @@
 class Meteor {
   float x;
   float y;
-  float d = 16; // Smaller meteorite size
+  float d; // Random meteorite size
   float r;
   float speedx;
   float speedy;
@@ -11,12 +11,13 @@ class Meteor {
   float rotation = 0;
   float rotationSpeed;
   float[] rockVertices; // For irregular shape
+  boolean active = true; // Track if meteor is still in play
   
   Meteor(float d) {
     this.x = random(width);
     this.y = 20;
-    this.speedx = random(-2, 2);
-    this.speedy = random(1, 3);
+    this.speedx = 0; // No horizontal movement
+    this.speedy = random(2, 4); // Only downward movement
     // Dark rocky meteorite colors
     float colorType = random(1);
     if (colorType < 0.5) {
@@ -37,7 +38,7 @@ class Meteor {
   }
   
   Meteor() {
-    this(16);
+    this(random(10, 30)); // Random size between 12 and 24 pixels
   }
   
   boolean intersects(Shape s) {
@@ -61,15 +62,11 @@ class Meteor {
 
   void setPosition(Shape topWall, Shape bottomWall, 
     Shape leftWall, Shape rightWall, Shape paddle ) {
-    if (this.intersects(topWall)) {
-      speedy = speedy*-1;
-    } else if (this.intersects(bottomWall)) {
-      meteorCount--;
-    } else if (this.intersects(rightWall) || 
-                      this.intersects(leftWall)) {
-      speedx = speedx*-1;
+    // Meteors only fall down, so only check bottom wall and paddle
+    if (this.intersects(bottomWall)) {
+      active = false; // Mark this meteor as inactive
     } else if (this.intersects(paddle)) {
-      speedy = speedy*-1;
+      speedy = speedy*-1; // Bounce off spaceship
     }
     
     // Track fire tail positions

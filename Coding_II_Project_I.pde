@@ -56,12 +56,17 @@ void draw(){
   rightWall.draw();
   topWall.draw();
   bottomWall.draw();
-  for (int i = 0; i < meteorCount; i++) {    
-    meteors[i].setPosition(topWall, 
-    bottomWall, leftWall, rightWall, 
-    spaceship);
-    meteors[i].draw();
+  
+  // Draw and update only active meteors
+  for (int i = 0; i < meteorCount; i++) {
+    if (meteors[i] != null && meteors[i].active) {
+      meteors[i].setPosition(topWall, 
+      bottomWall, leftWall, rightWall, 
+      spaceship);
+      meteors[i].draw();
+    }
   }
+  
   if (gameStarted) {
     spaceship.setPosition();
   }
