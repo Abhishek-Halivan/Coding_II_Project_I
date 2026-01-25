@@ -66,7 +66,10 @@ class Meteor {
     if (this.intersects(bottomWall)) {
       active = false; // Mark this meteor as inactive
     } else if (this.intersects(paddle)) {
-      speedy = speedy*-1; // Bounce off spaceship
+      active = false; // Destroy meteor
+      spaceshipDestroyed = true; // Trigger game over
+      gameOver = true;
+      gameOverTime = millis();
     }
     
     // Track fire tail positions

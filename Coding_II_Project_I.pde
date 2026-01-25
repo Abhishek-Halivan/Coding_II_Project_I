@@ -8,6 +8,9 @@ float spawnInterval = 2000; // Initial interval in milliseconds
 float lastShotTime = 0;
 float shootCooldown = 200; // Milliseconds between shots
 boolean gameStarted = false;
+boolean gameOver = false;
+boolean spaceshipDestroyed = false;
+float gameOverTime = 0;
 Wall leftWall;
 Wall rightWall;
 Wall topWall;
@@ -26,6 +29,25 @@ void setup(){
 
 void draw(){
   background(0);
+  
+  // Check for game over screen
+  if (gameOver) {
+    // Draw game over screen
+    fill(255, 0, 0);
+    textAlign(CENTER, CENTER);
+    textSize(72);
+    text("GAME OVER", width/2, height/2 - 40);
+    
+    fill(255);
+    textSize(24);
+    text("Meteor destroyed your spaceship!", width/2, height/2 + 20);
+    
+    // Auto-reset after 3 seconds
+    if (millis() - gameOverTime > 3000) {
+      resetGame();
+    }
+    return;
+  }
   
   if (!gameStarted) {
     // Title screen
@@ -52,11 +74,33 @@ void draw(){
   
   // Game logic - only runs when game started
   // Automatically spawn meteors at random intervals
-  if (millis() - lastSpawnTime > spawnInterval && meteorCount < meteors.length) {
-    meteors[meteorCount] = new Meteor();
-    meteorCount++;
-    lastSpawnTime = millis();
-    spawnInterval = random(800, 2500); // Random interval between 0.8 to 2.5 seconds
+  // Count active meteors
+  int activeMeteors = 0;
+  for (int i = 0; i < meteorCount; i++) {
+    if (meteors[i] != null && meteors[i].active) {
+      activeMeteors++;
+    }
+  }
+  
+  // Spawn new meteors if under limit
+  if (millis() - lastSpawnTime > spawnInterval && activeMeteors < maxMeteors) {
+    // Find an empty or inactive slot
+    int slot = -1;
+    for (int i = 0; i < meteors.length; i++) {
+      if (meteors[i] == null || !meteors[i].active) {
+        slot = i;
+        break;
+      }
+    }
+    
+    if (slot != -1) {
+      meteors[slot] = new Meteor();
+      if (slot >= meteorCount) {
+        meteorCount = slot + 1;
+      }
+      lastSpawnTime = millis();
+      spawnInterval = random(800, 2500); // Random interval between 0.8 to 2.5 seconds
+    }
   }
   
   leftWall.draw();
@@ -97,7 +141,9 @@ void draw(){
   if (gameStarted) {
     spaceship.setPosition();
   }
-  spaceship.draw();
+  if (!spaceshipDestroyed) {
+    spaceship.draw();
+  }
   if (meteorCount == 0){
     println("You lost: " + meteorCount);
   }
@@ -120,4 +166,17 @@ void keyPressed() {
       lastShotTime = millis();
     }
   }
+}
+
+void resetGame() {
+  // Reset all game variables
+  gameStarted = false;
+  gameOver = false;
+  spaceshipDestroyed = false;
+  meteorCount = 0;
+  meteors = new Meteor[maxMeteors];
+  bullets.clear();
+  spaceship = new Spaceship();
+  lastSpawnTime = 0;
+  spawnInterval = 2000;
 }
