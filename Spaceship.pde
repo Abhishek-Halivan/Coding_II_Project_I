@@ -5,16 +5,28 @@ class Spaceship extends Shape {
   color accentColor;
   float thrusterAnimation = 0;
   
+  int health = 5;
+
   Spaceship(color spaceshipColor) {
     this.spaceshipColor = spaceshipColor;
     this.accentColor = #00FFFF; // Cyan accent for spaceship
     this.y = 450;
     this.w = 40;
     this.h = 30;
+    this.health = 5;
   }
   
   Spaceship() {
     this(#0088FF); // Blue spaceship color
+  }
+
+  void setHealth(int h) {
+    this.health = h;
+  }
+  
+  boolean takeDamage() {
+    health--;
+    return health <= 0;
   }
   
   void setPosition() {

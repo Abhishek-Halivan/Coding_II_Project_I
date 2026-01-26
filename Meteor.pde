@@ -13,11 +13,11 @@ class Meteor {
   float[] rockVertices; // For irregular shape
   boolean active = true; // Track if meteor is still in play
   
-  Meteor(float d) {
+  Meteor(float d, float minSpeed, float maxSpeed) {
     this.x = random(width);
     this.y = 20;
     this.speedx = 0; // No horizontal movement
-    this.speedy = random(2, 4); // Only downward movement
+    this.speedy = random(minSpeed, maxSpeed); // Only downward movement
     // Dark rocky meteorite colors
     float colorType = random(1);
     if (colorType < 0.5) {
@@ -37,8 +37,8 @@ class Meteor {
     }
   }
   
-  Meteor() {
-    this(random(10, 30)); // Random size between 12 and 24 pixels
+  Meteor(float minSpeed, float maxSpeed) {
+    this(random(10, 30), minSpeed, maxSpeed); // Random size between 12 and 24 pixels
   }
   
   boolean intersects(Shape s) {
@@ -61,15 +61,18 @@ class Meteor {
   }
 
   void setPosition(Shape topWall, Shape bottomWall, 
-    Shape leftWall, Shape rightWall, Shape paddle ) {
+    Shape leftWall, Shape rightWall, Spaceship s ) {
     // Meteors only fall down, so only check bottom wall and paddle
     if (this.intersects(bottomWall)) {
       active = false; // Mark this meteor as inactive
-    } else if (this.intersects(paddle)) {
+    } else if (this.intersects(s)) {
       active = false; // Destroy meteor
-      spaceshipDestroyed = true; // Trigger game over
-      gameOver = true;
-      gameOverTime = millis();
+      boolean destroyed = s.takeDamage();
+      if (destroyed) {
+        spaceshipDestroyed = true; // Trigger game over
+        gameOver = true;
+        gameOverTime = millis();
+      }
     }
     
     // Track fire tail positions
